@@ -5,9 +5,9 @@ clc;
 
 % Boundaries
 x_min   = 0;
-x_max   = 40;
+x_max   = 10;
 y_min   = 0;
-y_max   = 1;
+y_max   = 10;
 t_min   = 0;
 t_max   = 3;
 
@@ -36,7 +36,7 @@ function T_mat = get_temp(x_vec, y_vec, t_vec)
     for i = 1:length(t_vec)
         T_x     = (x_vec - x_vec(1)).*(x_vec - x_vec(end));
         T_y     = (y_vec_temp - y_vec_temp(1)).*(y_vec_temp - y_vec_temp(end));
-        T_mat(:,:,i)    = 5*t_vec(i)^2*exp(-0.1*x_vec) + T_x.*T_y*exp(-0.5*t_vec(i));
+        T_mat(:,:,i)    = T_x.*T_y*exp(-0.5*t_vec(i));
     end
 
 end
