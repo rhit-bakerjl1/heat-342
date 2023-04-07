@@ -38,5 +38,5 @@ function T_mat = get_temp(x_vec, y_vec, t_vec)
         T_y     = (y_vec_temp - y_vec_temp(1)).*(y_vec_temp - y_vec_temp(end));
         T_mat(:,:,i)    = T_x.*T_y*exp(-0.5*t_vec(i));
     end
-
+    
 end
