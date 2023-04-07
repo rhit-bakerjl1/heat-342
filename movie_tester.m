@@ -26,7 +26,7 @@ t_vec   = linspace(t_min, t_max, Nt);
 T_mat_3d    = get_temp(x_vec, y_vec, t_vec);
 
 % Movie Time!
-func_movie_maker(x_vec, y_vec, T_mat_3d, t_max);
+func_movie_maker(x_vec, y_vec, T_mat_3d);
 
 %% Helpful Functions
 function T_mat = get_temp(x_vec, y_vec, t_vec)
