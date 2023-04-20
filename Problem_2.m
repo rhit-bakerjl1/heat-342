@@ -4,15 +4,15 @@ clear;
 clc;
 
 % Constants
-T_max   = 30;
-L       = 0.1;
+T_max   = 5;
+L       = 0.5;
 % kappa   = 0.971796754;    % Minimum where no negative displacement
 kappa_g = 0.5;
 
 % Rubber Band Constants
-h       = 5;
+h       = 0.1;
 x_pull  = L/2;
-fast_forward    = 5;
+fast_forward    = 1;
 
 % optimize?
 optim   = 0;
@@ -101,6 +101,7 @@ if (movie)
         figure(movie_plt);
         plot(x_vec, u_mat(i,:));
         xlim([0,L]);
+        axis equal;
         ylim([min_u,max_u]);
         xlabel("x position");
         ylabel("u displacement");

@@ -4,7 +4,7 @@ function [] = func_movie_maker(x_vec, y_vec, T_mat_3d, fileName)
     % INPUTS
     % x_vec -- N x 1 vector of x-coordinates. 
     % y_vec -- M x 1 vector of y-coordinates.
-    % T_mat_3d -- N x M x P 3D matrix of temperature information. P is the
+    % T_mat_3d -- M x N x P 3D matrix of temperature information. P is the
     %             number of time steps taken in the computation.
     % filename -- (optional) name of the file to be exported. Should end in
     %             ".mp4"
@@ -13,7 +13,7 @@ function [] = func_movie_maker(x_vec, y_vec, T_mat_3d, fileName)
     [~, ~, Nt]    = size(T_mat_3d);
     
     % Checking for optional parameter fignum
-    if (~exist('fignum', 'var'))
+    if (~exist('fileName', 'var'))
         fileName  = 'testmovie.mp4';
     end
 
