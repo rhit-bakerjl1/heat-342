@@ -1,6 +1,6 @@
 function [u_mat, x_vec, t_vec, delX, delT] = r_band_u_mat(kappa, T, L, h, x_pull)
     % Constants
-    H_rho   = 0.1;
+    H_rho   = 0.12;
     % delX    = 0.01;
     % delT    = 0.028;
     delX    = 0.005;
