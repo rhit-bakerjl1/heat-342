@@ -8,7 +8,7 @@ optim   = 0;
 movie   = 1;
 test_k  = 0;
 r_band  = 0;
-record  = 0;
+record  = 1;
 plt_minmax  = 0;
 
 % Constants
@@ -24,10 +24,10 @@ if (r_band)
     h   = 0.03;
     x_pull  = L*0.5;
 else
-    T_max   = 6;
+    T_max   = 30;
     L   = 2;
     % kappa_g     = 0.9714;
-    kappa_g     = 0.3;
+    kappa_g     = 0.9805;
 end
 
 % Fast Forward movie
@@ -37,12 +37,12 @@ end
 
 % Filename for recording
 if (record) 
-    fileName    = "1D Wave k=0 Full.mp4";
+    fileName    = "1D Wave Critical Damping.mp4";
 end
 
 % Find optimal kappa for each value
 if (optim)
-    T_optim     = linspace(6,T_max,500);
+    T_optim     = linspace(6,T_max,200);
     kappa_optim = zeros(size(T_optim));
     for i = 1:length(T_optim)
         kappa_optim(i) = fmincon(@(k)func_resid_Pb2(k, T_optim(i), L), kappa_g, -1, 0);
@@ -184,7 +184,7 @@ function [f] = func_resid_Pb2(kappa, T, L)
     % Minimization function
     f   = kappa;
     if (u_min < 0) 
-        f = f - u_min*10000;
+        f = f - u_min*1000000;
     end
 end
 
