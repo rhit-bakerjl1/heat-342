@@ -7,8 +7,8 @@ clc;
 optim   = 0;
 movie   = 1;
 test_k  = 0;
-r_band  = 1;
-record  = 1;
+r_band  = 0;
+record  = 0;
 plt_minmax  = 0;
 
 % Constants
@@ -24,9 +24,10 @@ if (r_band)
     h   = 0.03;
     x_pull  = L*0.5;
 else
-    T_max   = 50;
+    T_max   = 6;
     L   = 2;
-    kappa_g     = 0.9714;
+    % kappa_g     = 0.9714;
+    kappa_g     = 0.3;
 end
 
 % Fast Forward movie
@@ -36,7 +37,7 @@ end
 
 % Filename for recording
 if (record) 
-    fileName    = "p2_vid6.mp4";
+    fileName    = "1D Wave k=0 Full.mp4";
 end
 
 % Find optimal kappa for each value
