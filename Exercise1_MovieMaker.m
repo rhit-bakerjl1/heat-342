@@ -1,4 +1,4 @@
-function [] = func_movie_maker(x_vec, y_vec, T_mat_3d, fileName)
+function [] = Exercise1_MovieMaker(x_vec, y_vec, T_mat_3d, fileName)
     % Creates a .mp4 file out of x and y coordinates, and 3D T matrix which
     % holds all the temperature information over a given time period. 
     % INPUTS
@@ -16,7 +16,7 @@ function [] = func_movie_maker(x_vec, y_vec, T_mat_3d, fileName)
     % Find dimensions of T_mat_3d
     [~, ~, Nt]    = size(T_mat_3d);
     
-    % Checking for optional parameter fileName
+    % Checking for optional parameter fignum
     if (~exist('fileName', 'var')) || isempty(fileName)
         fileName  = 'testmovie.mp4';
     end

@@ -1,10 +1,11 @@
-function [u_mat, x_vec, t_vec, delX, delT] = r_band_u_mat(kappa, T, L, h, x_pull)
+function [u_mat, x_vec, t_vec, delX, delT] = r_band_u_mat(kappa, T, L, h, x_pull, H_rho)
     % Constants
-    H_rho   = 0.1;
+    % H_rho   = 0.011;
+    % H_rho   = 100;
     % delX    = 0.01;
-    % delT    = 0.028;
-    delX    = 0.005;
-    delT    = 0.014;
+    delX    = L/100;
+    % delT    = 0.9*delX*sqrt(1/H_rho);
+    delT    = 0.9*delX*sqrt(1/H_rho);
     if (~exist("h", "var")) 
         h   = L/4;
     end
@@ -22,6 +23,12 @@ function [u_mat, x_vec, t_vec, delX, delT] = r_band_u_mat(kappa, T, L, h, x_pull
     % Initial Conditions u(t,x)
     u_mat(1,x_vec<=x_pull)  = (h/x_pull)*x_vec(x_vec<=x_pull);
     u_mat(1,x_vec>x_pull)   = -h/(L-x_pull)*x_vec(x_vec>x_pull) + h*L/(L-x_pull);
+
+    % Initial Velocity Profile
+    % v0_vec  = -u_mat(1,:)*6;
+    % v0_vec  = -u_mat(1,:)*6*H_rho;
+    v0_vec  = -u_mat(1,:)*5*H_rho;
+    % u_mat(2,:)  = u_mat(1,:) + v0_vec*delT;
     u_mat(2,:)  = u_mat(1,:);
     
     % Time Stepping

@@ -3,26 +3,46 @@ close;
 clear;
 clc;
 
-% Constants
-T_max   = 30;
-L       = 0.1;
-% kappa   = 0.971796754;    % Minimum where no negative displacement
-kappa_g = 0.5;
-
-% Rubber Band Constants
-h       = 5;
-x_pull  = L/2;
-fast_forward    = 5;
-
-% optimize?
+% Options
 optim   = 0;
 movie   = 1;
 test_k  = 0;
-r_band  = 1;
+r_band  = 0;
+record  = 1;
+plt_minmax  = 0;
+
+% Constants
+if (r_band)
+    % T_max   = 40;
+    % T_max   = 2.25;
+    T_max   = 0.2;
+    L   = 0.2;
+    H_rho   = 80;
+    kappa_g     = 0.05*H_rho;
+    % Rubber Band Constants
+    % h       = 0.012;
+    h   = 0.03;
+    x_pull  = L*0.5;
+else
+    T_max   = 30;
+    L   = 2;
+    % kappa_g     = 0.9714;
+    kappa_g     = 0.9805;
+end
+
+% Fast Forward movie
+if (movie && ~record)
+    fast_forward    = 5;
+end
+
+% Filename for recording
+if (record) 
+    fileName    = "1D Wave Critical Damping.mp4";
+end
 
 % Find optimal kappa for each value
 if (optim)
-    T_optim     = 6:0.5:T_max;
+    T_optim     = linspace(6,T_max,200);
     kappa_optim = zeros(size(T_optim));
     for i = 1:length(T_optim)
         kappa_optim(i) = fmincon(@(k)func_resid_Pb2(k, T_optim(i), L), kappa_g, -1, 0);
@@ -60,7 +80,9 @@ end
 
 % Rubber Band Testing
 if (r_band)
-    [u_mat, x_vec, t_vec, delX, delT]   = r_band_u_mat(kappa_g, T_max, L, h, x_pull);
+    [u_mat, x_vec, t_vec, delX, delT]   = r_band_u_mat(kappa_g, T_max, L, h, x_pull, H_rho);
+else 
+    [u_mat, x_vec, t_vec, delX, delT]   = get_u_mat(kappa_g, T_max, L);
 end
 
 % Testing kappa plot
@@ -90,21 +112,65 @@ if (test_k)
     legend(legend_labels);
 end
 
+if (plt_minmax)
+    % Find Local Maximums
+    u_mat_mid   = u_mat(:,round(width(u_mat)/2));
+    % Find local maxes
+    t_vec_max   = t_vec(islocalmax(u_mat_mid));
+    localMaxs   = u_mat_mid(islocalmax(u_mat_mid));
+    t_vec_max   = t_vec_max(localMaxs>0);
+    localMaxs   = localMaxs(localMaxs>0); 
+    localMaxs_use   = unique(round(localMaxs,4));
+    disp("There are " + length(localMaxs_use) + " local maximums");
+    
+    % Plotting Local Maximums
+    figure(5);
+    clf;
+    plot(t_vec, u_mat_mid);
+    hold on;
+    plot(t_vec_max, localMaxs, "ro");
+    xlabel("Time (s)");
+    ylabel("Middle displacement");
+end
+
 % Movie
 if (movie)
+    % .mp4 stuff
+    if (record)
+        vidfile = VideoWriter(fileName, 'MPEG-4');
+        open(vidfile);
+    end
+    % Plotting
     movie_plt   = 4;
     figure(movie_plt);
     clf;
+    % Bounds for movie
     max_u   = max(max(u_mat));
     min_u   = min(min(u_mat));
+    curr_prnt   = 0.1;
     for i = 1:length(t_vec)
         figure(movie_plt);
         plot(x_vec, u_mat(i,:));
         xlim([0,L]);
+        axis equal;
         ylim([min_u,max_u]);
         xlabel("x position");
         ylabel("u displacement");
-        pause(delT/fast_forward);
+        % .mp4 file stuff
+        if (record) 
+            frame = getframe(gcf);
+            writeVideo(vidfile, frame);
+        else
+            pause(delT/fast_forward);
+        end
+        % Tracking where we are in time
+        if (t_vec(i) > curr_prnt)
+            disp("t = " + curr_prnt + " s");
+            curr_prnt = curr_prnt+0.1;
+        end
+    end
+    if (record)
+        close(vidfile);
     end
 end
 
@@ -118,7 +184,7 @@ function [f] = func_resid_Pb2(kappa, T, L)
     % Minimization function
     f   = kappa;
     if (u_min < 0) 
-        f = f - u_min*10000;
+        f = f - u_min*1000000;
     end
 end
 
