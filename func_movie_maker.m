@@ -16,13 +16,8 @@ function [] = func_movie_maker(x_vec, y_vec, T_mat_3d, fileName)
     % Find dimensions of T_mat_3d
     [~, ~, Nt]    = size(T_mat_3d);
     
-<<<<<<< HEAD:Exercise1_MovieMaker.m
     % Checking for optional parameter fileName
     if (~exist('fileName', 'var')) || isempty(fileName)
-=======
-    % Checking for optional parameter fignum
-    if (~exist('fileName', 'var'))
->>>>>>> f9536d6cbfffd493b9985d318e26cd19f1d1a59f:func_movie_maker.m
         fileName  = 'testmovie.mp4';
     end
 
@@ -32,18 +27,17 @@ function [] = func_movie_maker(x_vec, y_vec, T_mat_3d, fileName)
     T_range = T_max - T_min;
     z_min   = T_min - T_range;
     z_max   = T_max + T_range;
-
     % Make the movie
     vidfile = VideoWriter(fileName, 'MPEG-4');
     open(vidfile);
     for i = 1:Nt
         graph = surfc(x_vec, y_vec, T_mat_3d(:,:,i));
-        view(mod(i, 360), 25);
+%         view(mod(i, 360), 25);
         set(graph, "EdgeColor", "None");
         title(strrep(extractBefore(fileName, "."), "_", " "));
         xlabel("x");
         ylabel("y");
-        zlabel("Temp. (C)");
+        zlabel("u displacement");
         zlim([z_min, z_max]);
         frame   = getframe(gcf);
         writeVideo(vidfile, frame);

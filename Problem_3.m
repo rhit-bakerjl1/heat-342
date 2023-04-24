@@ -6,11 +6,11 @@ clc;
 p=2;
 Lx=2;
 Ly=2;
-T = 60;
-alpha = 0.05;
-dx = 0.01;
-dy = 0.01;
-dt = 0.028;
+alpha = 2;
+dx = 0.05;
+dy = 0.05;
+dt = .95*dx*dx*sqrt(1/alpha);
+T = 3000*dt;
 PosX = unique([0-Lx/2:dx:Lx/2,Lx/2]);
 PosY = unique([0-Ly/2:dy:Ly/2,Ly/2]);
 Time = unique([0:dt:T,T]);
@@ -22,12 +22,13 @@ for i=1:length(PosX)
             Sol(i,j,1) = 0.1;
         end
         if norm(v,p) <= 1+min(dx,dy)/1.5
-            Sol(i,j,2) = (PosX(i)^2+PosY(j)^2)/10;
+            Sol(i,j,1) = (PosX(i)^2+PosY(j)^2)/10;
         end
+        Sol(i,j,2) = Sol(i,j,1);
     end
 end
-rx = alpha*dt^2 / dx^2;
-ry = alpha*dt^2 / dy^2;
+rx = 2*dt^2 / dx^2;
+ry = 2*dt^2 / dy^2;
 indx = 2:length(PosX)-1;
 indy = 2:length(PosY)-1;
 for k = 3:length(Time)
@@ -38,9 +39,9 @@ for k = 3:length(Time)
             r = norm(v,p);
             if r < 1-min(dx,dy)/1.5
                 Sol(i,j,k) = 2*Sol(i,j,k-1) - Sol(i,j,k-2) + ...
-                    (rx*(Sol(i+1,j,k-1) - 2*Sol(i,j,k-1) + ...
+                    rx*(Sol(i+1,j,k-1) - 2*Sol(i,j,k-1) + ...
                     Sol(i-1,j,k-1)) + ry*(Sol(i,j+1,k-1) - ...
-                    2*Sol(i,j,k-1) + Sol(i,j-1,k-1)))/2;
+                    2*Sol(i,j,k-1) + Sol(i,j-1,k-1));
             elseif abs(r-1) <= min(dx,dy)/1.5
                 Sol(i,j,k) = .1;
             else
