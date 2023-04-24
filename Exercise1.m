@@ -101,4 +101,4 @@ end
 [xLenTot, yLenTot, ~] = size(moviePointTemps);
 
 % func_movie_maker([1:yLenTot]', [1:xLenTot]', mpt3, "Exercise1.mp4")
-func_movie_maker([1:yLenTot]', [1:xLenTot]', moviePointTemps, filename)
+Exercise1_MovieMaker([1:yLenTot]', [1:xLenTot]', moviePointTemps, filename)

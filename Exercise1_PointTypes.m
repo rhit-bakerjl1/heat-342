@@ -1,10 +1,12 @@
-function [pointTypes] = Exercise1_PointTypes(density, r, plot)
+function [pointTypes] = Exercise1_PointTypes(density, r, padding, full, plot)
 % Only solves top right quadrant, then pass through a function to reflect
 % to the other four quadrants.
 %
 % INPUTS
 % density -- density of points to generate
 %       r -- radius of curve and side length of square
+%    full -- whether or not to generate all four quadrants rather than
+%            just the upper left quadrant (DEFAULT: 0)
 %    plot -- whether or not to display results (DEFUALT: 0)
 %
 % OUTPUTS
@@ -17,6 +19,11 @@ function [pointTypes] = Exercise1_PointTypes(density, r, plot)
 % Type 2: On the curve at top
 % Type 3: Interior
 
+% Set full to 0 if no argument was provided
+if ~exist("full", "var") || isempty(full)
+    full = 0;
+end
+
 % Set plot to 0 if no argument was provided
 if ~exist("plot", "var") || isempty(plot)
     plot = 0;
@@ -24,16 +31,15 @@ end
 
 % Define a function that converts from point to index
 ptoi = @(x) round(1 + (x/density));
-itop = @(x) density*(x-1);
 
 % Initialize point types 2D matrix
-xLen = (r/density)+2;
-yLen = (2*r/density)+2;
+xLen = (r/density)+3;
+yLen = (2*r/density)+3;
 pointTypes = zeros(xLen, yLen);
 
 % Defines how wide to make the border on the curve
-% Default value of 10. To make thicker line, make widthFactor smaller
-widthFactor = 8;
+% Default value of 7. To make thicker line, make widthFactor smaller
+widthFactor = 7;
 
 % Define all points on and inside curve
 maxDist = density/widthFactor/sqrt(2);
@@ -61,14 +67,21 @@ for y = 0 : density : r
     pointTypes(ptoi(x), ptoi(y)) = 1;
 end
 
-pointTypes = pointTypes';
-
 % Reflect the points across themselves to complete the shape
-pt2 = cat(1, flip(pointTypes, 1), pointTypes);
-pt3 = cat(2, flip(pt2, 2), pt2);
+if full
+    pt2 = cat(1, flip(pointTypes, 1), pointTypes);
+    pt3 = cat(2, flip(pt2, 2), pt2);
+    pointTypes = pt3(2:end, 2:end);
+end
+
+pointTypes = padarray(pointTypes, [padding, padding], 0, "both");
 
 % If plot is set to true, plot the points by color
 if plot ~= 0
     axis equal;
-    pcolor(pt3)
+    graph = pcolor(pointTypes);
+    set(graph, "EdgeColor", "None")
 end
+
+% Flip the axes to be what is expected
+pointTypes = pointTypes';
