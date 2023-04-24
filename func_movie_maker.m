@@ -27,6 +27,7 @@ function [] = func_movie_maker(x_vec, y_vec, T_mat_3d, fileName)
     T_range = T_max - T_min;
     z_min   = T_min - T_range;
     z_max   = T_max + T_range;
+    titleName = strrep(extractBefore(fileName, "."), "_", " ");
     % Make the movie
     vidfile = VideoWriter(fileName, 'MPEG-4');
     open(vidfile);
@@ -34,7 +35,7 @@ function [] = func_movie_maker(x_vec, y_vec, T_mat_3d, fileName)
         graph = surfc(x_vec, y_vec, T_mat_3d(:,:,i));
 %         view(mod(i, 360), 25);
         set(graph, "EdgeColor", "None");
-        title(strrep(extractBefore(fileName, "."), "_", " "));
+        title(titleName);
         xlabel("x");
         ylabel("y");
         zlabel("u displacement");
