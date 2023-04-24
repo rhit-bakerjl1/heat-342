@@ -5,10 +5,10 @@ clc;
 
 % Options
 optim   = 0;
-movie   = 1;
+movie   = 0;
 test_k  = 0;
-r_band  = 0;
-record  = 1;
+r_band  = 1;
+record  = 0;
 plt_minmax  = 0;
 
 % Constants
@@ -22,7 +22,7 @@ if (r_band)
     % Rubber Band Constants
     % h       = 0.012;
     h   = 0.03;
-    x_pull  = L*0.5;
+    x_pull  = L*0.6;
 else
     T_max   = 30;
     L   = 2;
@@ -81,6 +81,14 @@ end
 % Rubber Band Testing
 if (r_band)
     [u_mat, x_vec, t_vec, delX, delT]   = r_band_u_mat(kappa_g, T_max, L, h, x_pull, H_rho);
+
+    % Plotting 
+    figure(1);
+    clf;
+    plot(x_vec, u_mat(1,:));
+    xlabel("x position");
+    ylabel("u displacement");
+    ylim([0,0.05]);
 else 
     [u_mat, x_vec, t_vec, delX, delT]   = get_u_mat(kappa_g, T_max, L);
 end
