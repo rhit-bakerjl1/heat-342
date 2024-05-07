@@ -5,9 +5,9 @@ clc;
 
 % Options
 optim   = 0;
-movie   = 0;
+movie   = 1;
 test_k  = 0;
-r_band  = 1;
+r_band  = 0;
 record  = 0;
 plt_minmax  = 0;
 
